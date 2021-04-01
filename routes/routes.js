@@ -6,7 +6,9 @@ const {
 	register, login
 } = require('../controllers/controllers.js');
 
-router.get('/', getEmails);
+router.get('/', (req, res) => {
+	res.send('This is working.')
+});
 router.get('/emails', getEmails);
 
 router.post('/login', login);
