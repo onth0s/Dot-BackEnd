@@ -36,25 +36,15 @@ const register = async (req, res) => {
 			const newUser = new UserCredential();
 			newUser.email = email;
 			newUser.password = await bcrypt.hash(password, 10);
-
-			// newUser.save().then(doc => {
-			// 	console.log(`UserCredential '${email}' registered successfully!`);
-			// 	console.log(doc);
-			// }).catch(err => {
-			// 	console.log('Error saving UserCredential:');
-			// 	console.log(err.message);
-			// });
+			
 			try {
-				console.log('before save()');
 				const doc = await newUser.save();
 				console.log(`UserCredential '${email}' registered successfully!`);
 				console.log(doc);
-				console.log('after save()');
 			} catch (err) {
 				console.log('Error saving UserCredential:');
 				console.log(err.message);
 			}
-
 
 			res.send(`UserCredential '${email}' registered successfully!`);
 			res.status(200).end();
