@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const UserCredential = require('../models/UserCredential.js');
+const AesopFable = require('../models/AesopFable.js');
 
 const getEmails = async (req, res) => {
 	try {
@@ -36,7 +37,7 @@ const register = async (req, res) => {
 			const newUser = new UserCredential();
 			newUser.email = email;
 			newUser.password = await bcrypt.hash(password, 10);
-			
+
 			try {
 				const doc = await newUser.save();
 				console.log(`UserCredential '${email}' registered successfully!`);
@@ -58,17 +59,30 @@ const register = async (req, res) => {
 	}
 }
 
-
-
 let counter = 0;
 const getFables = async (req, res) => {
 	console.log(`\ngetting Aesop fables... (${counter++})`);
 
-	
+	try {
+		AesopFable.countDocuments().exec(async (err, count) => {
+			if (err) return res.sendStatus(404);
 
-	res.json({
-		fables_go_here: 'El helefante y la ormiga'
-	});
+			const random = Math.floor(Math.random() * count);
+			try {
+				const fable = await AesopFable.findOne().skip(random - 1);
+
+				res.json({ fable });
+				console.log(`(${random}) fable title: ` + fable.title);
+			} catch (err) {
+				console.log('Error finding the fable:');
+				console.log(err);
+			}
+		});
+	} catch (err) {
+		console.log(`Error counting a AesopFable model:`);
+		console.log(err);
+	}
+
 }
 
 module.exports = {
