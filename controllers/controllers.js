@@ -58,7 +58,22 @@ const register = async (req, res) => {
 	}
 }
 
+
+
+let counter = 0;
+const getFables = async (req, res) => {
+	console.log(`\ngetting Aesop fables... (${counter++})`);
+
+	
+
+	res.json({
+		fables_go_here: 'El helefante y la ormiga'
+	});
+}
+
 module.exports = {
 	getEmails,
-	login, register
+	login, register,
+
+	getFables
 }
