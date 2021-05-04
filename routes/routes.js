@@ -14,6 +14,6 @@ router.post('/login', login);
 router.post('/register', register);
 
 // TODO this is new
-router.get('/content/fables/Aesop/', getFables);
+router.get('/content/fables/Aesop/random', getFables);
 
 module.exports = router;
