@@ -113,12 +113,12 @@ const CMSLogin = async (req, res) => {
 			console.log('Logging log saved successfully:');
 			console.log(doc);
 
-			return sendStatus(202);
+			return res.sendStatus(202);
 		}).catch(err => {
 			console.log('Error saving logging log:');
 			console.log(err);
 
-			return sendStatus(500);
+			return res.sendStatus(500);
 		});
 	} catch (err) {
 		console.log('Error finding user:');
