@@ -105,7 +105,8 @@ const CMSLogin = async (req, res) => {
 
 		if (userFound) {
 			loginLog.success = true;	
-			console.log();
+			console.log('userFound:');
+			console.log(userFound);
 		}
 		else loginLog.success = false;
 
