@@ -4,6 +4,7 @@ const UserCredential = require('../models/UserCredential.js');
 const AesopFable = require('../models/AesopFable.js');
 
 const CMSUser = require('../models/CMSUser.js');
+const CMSLoginLog = require('../models/CMSLoginLog.js');
 
 const getEmails = async (req, res) => {
 	try {
@@ -91,30 +92,47 @@ const getFables = async (req, res) => {
 
 
 
-const CMSLogin = async(req, res) => {
-	const { username, password } = req.body;
+const CMSLogin = async (req, res) => {
+	const { userCredentials: { username, password }, IP } = req.body;
 
-	const newUser = new CMSUser();
-	newUser.username = username;
+
+	const loginLog = new CMSLoginLog();
+	loginLog.username = username;
+	
+	loginLog.IP = IP;
 
 	try {
-		newUser.password = await bcrypt.hash(password, 10);
+		// newUser.password = await bcrypt.hash(password, 10);
 
-		newUser.save().then(doc => {
-			console.log('New user saved successfully:');
+		// newUser.save().then(doc => {
+		// 	console.log('New user saved successfully:');
+		// 	console.log(doc);
+		// }).catch(err => {
+		// 	console.log('Error saving new user:');
+		// 	console.log(err);
+		// });
+
+		const userFound = await CMSUser.findOne({ username });
+
+		if (userFound) loginLog.success = true;
+		else loginLog.success = false;
+
+		loginLog.save().then(doc => {
+			console.log('Logging log saved successfully:');
 			console.log(doc);
 		}).catch(err => {
-			console.log('Error saving new user:');
+			console.log('Error saving logging log:');
 			console.log(err);
 		});
 	} catch (err) {
-		console.log('Error creating user:');
+		console.log('Error finding user:');
 		console.log(err);
 	}
 
 	res.send('Data recieved successfully');
 	res.status(200);
 	res.end();
+
 	// res.json({
 	// 	test_message: 'this is just a test',
 	// })
