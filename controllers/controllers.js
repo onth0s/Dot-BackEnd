@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const UserCredential = require('../models/UserCredential.js');
 const AesopFable = require('../models/AesopFable.js');
 
+const CMSUser = require('../models/CMSUser.js');
+
 const getEmails = async (req, res) => {
 	try {
 		const doc = await UserCredential.find();
@@ -85,9 +87,46 @@ const getFables = async (req, res) => {
 
 }
 
+
+
+
+
+const CMSLogin = async(req, res) => {
+	const { username, password } = req.body;
+
+	const newUser = new CMSUser();
+	newUser.username = username;
+
+	try {
+		newUser.password = await bcrypt.hash(password, 10);
+
+		newUser.save().then(doc => {
+			console.log('New user saved successfully:');
+			console.log(doc);
+		}).catch(err => {
+			console.log('Error saving new user:');
+			console.log(err);
+		});
+	} catch (err) {
+		console.log('Error creating user:');
+		console.log(err);
+	}
+
+	res.send('Data recieved successfully');
+	res.status(200);
+	res.end();
+	// res.json({
+	// 	test_message: 'this is just a test',
+	// })
+}
+
 module.exports = {
 	getEmails,
 	login, register,
 
-	getFables
+	getFables,
+
+
+
+	CMSLogin,
 }
