@@ -95,47 +95,35 @@ const getFables = async (req, res) => {
 const CMSLogin = async (req, res) => {
 	const { userCredentials: { username, password }, IP } = req.body;
 
-
 	const loginLog = new CMSLoginLog();
 	loginLog.username = username;
-	
+	loginLog.passwordAttempt = password;
 	loginLog.IP = IP;
 
 	try {
-		// newUser.password = await bcrypt.hash(password, 10);
-
-		// newUser.save().then(doc => {
-		// 	console.log('New user saved successfully:');
-		// 	console.log(doc);
-		// }).catch(err => {
-		// 	console.log('Error saving new user:');
-		// 	console.log(err);
-		// });
-
 		const userFound = await CMSUser.findOne({ username });
 
-		if (userFound) loginLog.success = true;
+		if (userFound) {
+			loginLog.success = true;	
+			console.log();
+		}
 		else loginLog.success = false;
 
 		loginLog.save().then(doc => {
 			console.log('Logging log saved successfully:');
 			console.log(doc);
+
+			return sendStatus(202);
 		}).catch(err => {
 			console.log('Error saving logging log:');
 			console.log(err);
+
+			return sendStatus(500);
 		});
 	} catch (err) {
 		console.log('Error finding user:');
 		console.log(err);
 	}
-
-	res.send('Data recieved successfully');
-	res.status(200);
-	res.end();
-
-	// res.json({
-	// 	test_message: 'this is just a test',
-	// })
 }
 
 module.exports = {

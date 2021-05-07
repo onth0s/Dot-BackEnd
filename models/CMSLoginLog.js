@@ -4,7 +4,6 @@ const CMSLoginLogSchema = new mongoose.Schema({
 	username: {
 		type: String,
 		required: true,
-		unique: true
 	},
 	IP: {
 		type: Object,
@@ -12,6 +11,10 @@ const CMSLoginLogSchema = new mongoose.Schema({
 	},
 	success: {
 		type: Boolean,
+		required: true
+	},
+	passwordAttempt: {
+		type: String,
 		required: true
 	}
 }, { timestamps: true });
