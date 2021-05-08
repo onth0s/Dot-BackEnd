@@ -99,28 +99,49 @@ const CMSLogin = async (req, res) => {
 	loginLog.username = username;
 	loginLog.passwordAttempt = password;
 	loginLog.IP = IP;
+	loginLog.success = false;
 
 	try {
 		const userFound = await CMSUser.findOne({ username });
 
 		if (userFound) {
-			loginLog.success = true;	
-			console.log('userFound:');
-			console.log(userFound);
+			try {
+				const isPasswordCorrect = bcrypt.compareSync(password, userFound.password);
+				loginLog.success = isPasswordCorrect;
+				
+				console.log('isPasswordCorrect:');
+				console.log(isPasswordCorrect);
+			} catch (err) {
+				console.log('Error comparing password and hash:');
+				console.log(err);
+				
+				return res.sendStatus(500);
+			} 
+				
 		}
-		else loginLog.success = false;
+		else {
+			loginLog.success = false;
+		}
 
-		loginLog.save().then(doc => {
-			console.log('Logging log saved successfully:');
-			console.log(doc);
-
-			return res.sendStatus(202);
-		}).catch(err => {
+		try {
+			const savedLog = await loginLog.save();
+			console.log('savedLog:');
+			console.log(savedLog);
+		} catch (err) {
 			console.log('Error saving logging log:');
 			console.log(err);
+		}
+		// loginLog.save().then(doc => {
+		// 	console.log('Logging log saved successfully:');
+		// 	console.log(doc);
 
-			return res.sendStatus(500);
-		});
+		// 	return res.sendStatus(202);
+		// }).catch(err => {
+		// 	console.log('Error saving logging log:');
+		// 	console.log(err);
+
+		// 	return res.sendStatus(500);
+		// });
 	} catch (err) {
 		console.log('Error finding user:');
 		console.log(err);
