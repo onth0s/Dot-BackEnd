@@ -125,6 +125,7 @@ const CMSLogin = async (req, res) => {
 		}
 		else {
 			loginLog.success = false;
+			res.send('Wrong credentials').status(200);
 		}
 
 		try {
