@@ -112,8 +112,8 @@ const CMSLogin = async (req, res) => {
 				console.log('isPasswordCorrect:');
 				console.log(isPasswordCorrect);
 
-				if (isPasswordCorrect) return res.sendStatus(200);
-				else return res.send('Wrong credentials').status(200);
+				if (isPasswordCorrect) res.sendStatus(200);
+				else res.send('Wrong credentials').status(200);
 			} catch (err) {
 				console.log('Error comparing password and hash:');
 				console.log(err);
@@ -130,6 +130,7 @@ const CMSLogin = async (req, res) => {
 			const savedLog = await loginLog.save();
 			console.log('savedLog:');
 			console.log(savedLog);
+			return;
 		} catch (err) {
 			console.log('Error saving logging log:');
 			console.log(err);
@@ -145,8 +146,6 @@ const CMSLogin = async (req, res) => {
 
 		// 	return res.sendStatus(500);
 		// });
-
-		return res.sendStatus(202);
 	} catch (err) {
 		console.log('Error finding user:');
 		console.log(err);
