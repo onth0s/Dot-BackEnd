@@ -118,7 +118,8 @@ const CMSLogin = async (req, res) => {
 				console.log('Error comparing password and hash:');
 				console.log(err);
 				
-				return res.sendStatus(500);
+				// return res.sendStatus(500);
+				res.send('Wrong credentials').status(200);
 			} 
 				
 		}
