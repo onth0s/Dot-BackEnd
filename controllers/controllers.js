@@ -84,12 +84,7 @@ const CMSLogin = async (req, res) => {
 }
 
 module.exports = {
-	getEmails,
-	login, register,
-
 	getFables,
-
-
 
 	CMSLogin,
 }
