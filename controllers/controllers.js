@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const AesopFable = require('../models/AesopFable.js');
+const RandomContent = require('../models/RandomContent.js');
 
 const CMSUser = require('../models/CMSUser.js');
 const CMSLoginLog = require('../models/CMSLoginLog.js');
@@ -27,7 +28,18 @@ const getFables = async (req, res) => {
 	}
 
 }
-
+const getRandomContent = async (req, res) => {
+	try {
+		res.json({
+			test: 'something',
+			isThisWorking: true,
+			niceNumber: 42069,
+		});
+	} catch (err) {
+		console.log(`server error with RandomContent....`); // TODO write a better error message
+		console.log(err);
+	}
+}
 
 
 
@@ -48,7 +60,7 @@ const CMSLogin = async (req, res) => {
 			try {
 				const isPasswordCorrect = bcrypt.compareSync(password, userFound.password);
 				loginLog.success = isPasswordCorrect;
-				
+
 				console.log('isPasswordCorrect:');
 				console.log(isPasswordCorrect);
 
@@ -57,11 +69,11 @@ const CMSLogin = async (req, res) => {
 			} catch (err) {
 				console.log('Error comparing password and hash:');
 				console.log(err);
-				
+
 				// return res.sendStatus(500);
 				res.send('Wrong credentials').status(200);
-			} 
-				
+			}
+
 		}
 		else {
 			loginLog.success = false;
@@ -84,7 +96,7 @@ const CMSLogin = async (req, res) => {
 }
 
 module.exports = {
-	getFables,
+	getFables, getRandomContent,
 
 	CMSLogin,
 }
