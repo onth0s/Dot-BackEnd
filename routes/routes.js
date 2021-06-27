@@ -10,7 +10,7 @@ const {
 
 // TODO this is new
 router.get('/content/fables/Aesop/random', getFables);
-router.get('/content/random', getRandomContent);
+router.post('/content/random', getRandomContent);
 
 
 // TODO CMS ======================================

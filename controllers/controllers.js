@@ -6,7 +6,7 @@ const RandomContent = require('../models/RandomContent.js');
 const CMSUser = require('../models/CMSUser.js');
 const CMSLoginLog = require('../models/CMSLoginLog.js');
 
-const cat = require('../var/MPVContent/cat.json');
+const jsonText = require('../var/MPVContent/_1984.json');
 
 const getFables = async (req, res) => {
 	try {
@@ -29,23 +29,71 @@ const getFables = async (req, res) => {
 		console.log(err);
 	}
 }
+
+
+const getUnlockedTitles = (items) => {
+	if (!items) return console.log('No items to iterate!');
+	return items.map(el => {
+		return { title: { $ne: el.title } };
+	});
+}
+
+let retryCounter = 0;
 const getRandomContent = async (req, res) => {
 	try {
-		const content = new RandomContent();
-		content.title = 'El Gato Negro';
-		content.author = 'Edgar Allan Poe';
-		content.genre = 'SCIFI';
-		content.text = cat.text;
-		content.image = './assets/Library/Catalog/cat.png';
-		
+		// TODO ↓ to add content to the database
+		// const content = new RandomContent();
+		// content.title = 'Juana de Arco';
+		// content.author = 'Mark Twain';
+		// content.genre = 'HISTORICA';
+		// content.text = jsonText.text;
+		// content.image = './assets/Library/Catalog/janne.png';
+		// content.score = 4;
 
-		res.json({
-			title: 'Onda Vital a Todo Gas',
-			author: 'Pepe Problemas',
-			genre: 'ROMANCE',
-			text: ['test', 'test2', 'test3'],
-			image: './assets/common/images/vegita.jpg',
-			score: 5,
+		// content.save().then(doc => {
+		// 	console.log('content saved succesfully!');			
+		// }).catch(err => {
+		// 	console.log('Error saving token:');
+		// 	console.log(err);
+		// });
+
+		const unlocked = req.body;
+
+		RandomContent.countDocuments().exec(async (err, count) => {
+			if (err) return res.sendStatus(404);
+
+			const random = Math.floor(Math.random() * count);
+			try {
+				let isContentRepeated = true;
+
+				do {
+					const content = await RandomContent.findOne(getUnlockedTitles(unlocked).length > 0
+						? { $and: getUnlockedTitles(unlocked) }
+						: {}
+					).skip(random);
+
+					if (content) {
+						res.json(content); break;
+					}
+
+					if (retryCounter++ > count + 1) break; 
+
+					console.log('retryCounter:', retryCounter++);
+					// console.log('content:', content ? true : false);
+					// console.log('isContentRepeated:', isContentRepeated);
+				} while (isContentRepeated);
+				// if  res.json({message: 'tsdfsfasfasdcsafd'});
+				console.log('end of while');
+
+				console.log('no of docs: ' + count);
+
+				retryCounter = 0;
+
+				// console.log(`(${random}) content title: ` + content.title);
+			} catch (err) {
+				console.log('Error finding random content:');
+				console.log(err);
+			}
 		});
 	} catch (err) {
 		console.log(`server error with RandomContent....`); // TODO write a better error message
@@ -55,9 +103,9 @@ const getRandomContent = async (req, res) => {
 
 
 
+
 const CMSLogin = async (req, res) => {
 	const { userCredentials: { username, password }, IP } = req.body;
-
 	const loginLog = new CMSLoginLog();
 	loginLog.username = username;
 	loginLog.passwordAttempt = password;
