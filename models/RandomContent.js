@@ -36,9 +36,13 @@ const randomContentSchema = new mongoose.Schema({
 		type: String,
 		required: false,
 	},
+	score: {
+		type: Number,
+		required: true,
+	},
 
 }, { timestamps: true });
 
-const RandomContent = mongoose.model('random-content', randomContentSchema);
+ 	const RandomContent = mongoose.model('random-content', randomContentSchema);
 
 module.exports = RandomContent;
