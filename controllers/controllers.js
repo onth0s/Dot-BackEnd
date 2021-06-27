@@ -6,8 +6,6 @@ const RandomContent = require('../models/RandomContent.js');
 const CMSUser = require('../models/CMSUser.js');
 const CMSLoginLog = require('../models/CMSLoginLog.js');
 
-const jsonText = require('../var/MPVContent/_1984.json');
-
 const getFables = async (req, res) => {
 	try {
 		AesopFable.countDocuments().exec(async (err, count) => {
