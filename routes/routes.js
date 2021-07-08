@@ -4,7 +4,7 @@ const router = express.Router();
 const {
 	getFables, getRandomContent,
 
-	CMSLogin,
+	CMSLogin, uploadContent,
 } = require('../controllers/controllers.js');
 
 
@@ -15,5 +15,6 @@ router.post('/content/random', getRandomContent);
 
 // TODO CMS ======================================
 router.post('/CMS/login', CMSLogin);
+router.post('/CMS/upload', uploadContent);
 
 module.exports = router;

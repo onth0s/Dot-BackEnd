@@ -74,7 +74,7 @@ const getRandomContent = async (req, res) => {
 						res.json(content); break;
 					}
 
-					if (retryCounter++ > count + 1) break; 
+					if (retryCounter++ > count + 1) break;
 
 					console.log('retryCounter:', retryCounter++);
 					// console.log('content:', content ? true : false);
@@ -151,8 +151,39 @@ const CMSLogin = async (req, res) => {
 	}
 }
 
+const uploadContent = async (req, res) => {
+	const c = req.body;
+	console.log('c:');
+	console.log(c);
+
+	try {
+		// TODO ↓ to add content to the database
+		const content = new RandomContent();
+		content.title = c.title;
+		content.author = c.author;
+		content.genre = c.genre;
+		content.text = c.text;
+		// content.image = './assets/Library/Catalog/janne.png';
+		content.score = c.score;
+
+		console.log('content:');
+		console.log(content);
+
+		content.save().then(doc => {
+			console.log('Content saved succesfully!');
+		}).catch(err => {
+			console.log('Error saving content:');
+			console.log(err);
+		});
+	} catch (err) {
+		console.log(`Error uploading content:`);
+		console.log(err);
+	}
+
+}
+
 module.exports = {
 	getFables, getRandomContent,
 
-	CMSLogin,
+	CMSLogin, uploadContent,
 }
